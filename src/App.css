@@ -1,0 +1,19 @@
+body{
+  background: coral;
+}
+
+.nav{
+  background: chartreuse;
+    display: flex;
+    width: 1300px;
+    height: 100px;
+    border: 1px solid;
+    justify-content: center;
+    align-items: center;
+    gap: 250px;
+
+  }
+  li{
+    display: flex;
+    
+  }
