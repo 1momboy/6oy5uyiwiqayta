@@ -19,26 +19,57 @@ function App() {
   const [pname, setPname] = useState('');
   const [price, setPrice] = useState('');
   
+  const [editID, setEditID] = useState(null);
+  const [edit, setEdit] = useState(false);
 
 
   const [users, setUsers] = useState(getStore('users'));
   const [products, setProducts] = useState(getStore('products'));
  
   const handleSubmit = (e) => {
-    // e.preventDefault();
+    
     const newUser = {id: id, uname: name, uemail: email};
     setUsers([ newUser]);
   }
   const addProduct = () =>{
-    const newProduct = {id: id,  name: pname, price: price}
-  setProducts([...products, newProduct]);
+    if(!pname && !price ){
+      console.log('error');
+    } else if  (name && edit ) {
+      setProducts(products.map((item) => {
+        if(item.id === editID){
+          return {...item, name: pname , price:price}
+        }
+        return item;
+      }))
+  } else {
+    const newProduct ={id:id, name:pname, price:price};
+    setProducts([...products,newProduct]);
   }
+  } 
 
-    const deleteItem = (id) => {
-      const newItem = products.filter((item) => item.id !== id)
-      setProducts(newItem);
+  
+
+    
+      
+        
+    
+    
+
+    function deleteItem(id) {
+  const newItem = products.filter((item) => item.id !== id)
+  setProducts(newItem)
+  setEditID(id)
+  setName(newItem.name)
+  setPrice(newItem.price)
+}
+
+    const editItem = (id) => {
+      const newItem = products.find((item) => item.id === id)
+      setEdit(true);
+      setEditID(id);
+      setPname(newItem.name)
+      setPrice(newItem.price)
     }
-
 
     useEffect(() => {
       localStorage.setItem('users', JSON.stringify(users));
@@ -59,10 +90,10 @@ function App() {
         setEmail={setEmail}
         handleSubmit={handleSubmit}
         />}  
-        <Add pname={pname} setPname={setPname} price={price} setPrice={setPrice} addProduct={addProduct}/>
-        <Products products={products} deleteItem={deleteItem} />
+        <Add edit={edit} setEdit={setEdit} pname={pname} setPname={setPname} price={price} setPrice={setPrice} addProduct={addProduct}/>
+        <Products editItem={editItem}  setEdit={setEdit} products={products} deleteItem={deleteItem} />
     </>
   )
-}
 
+        }
 export default App

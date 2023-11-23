@@ -3,7 +3,7 @@
 export default function Login({name ,setName, email, setEmail, handleSubmit, }) {
   return (
     <div>
-        <form action="">
+        <form className="form2" action="">
             <input
                  type="text" 
                  value={name} 

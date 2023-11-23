@@ -1,8 +1,9 @@
 
 
-export default function Add({pname, setPname, price, setPrice, addProduct}) {
+export default function Add({edit, pname, setPname, price, setPrice, addProduct}) {
   return (
-    <div><form action="">
+    <div>
+      <form className="form1" action="" onSubmit={addProduct}>
         <input 
         type="text" 
         name="" 
@@ -17,10 +18,9 @@ export default function Add({pname, setPname, price, setPrice, addProduct}) {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
         />
-       <button onClick={() => addProduct () }>
-        add
+       <button >
+        {edit ? 'edit' : 'add'}
        </button>
-
         </form>
         </div>
   )
