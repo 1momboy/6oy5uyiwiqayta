@@ -3,10 +3,16 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Navbar from './components/navbar'
 import Login from './components/login'
-import { getStore } from './utils'
+import { getStore, getUser } from './utils'
 import { uid } from 'uid'
 import Products from './components/Products'
 import Add from './components/Add'
+import { Route, Routes } from 'react-router-dom'
+import Home from './page/Home'
+import About from './page/About'
+import Service from './page/Service'
+import Error from './page/Error'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
 
@@ -23,18 +29,18 @@ function App() {
   const [edit, setEdit] = useState(false);
 
 
-  const [users, setUsers] = useState(getStore('users'));
+  const [user, setUser] = useState(getUser('user'));
   const [products, setProducts] = useState(getStore('products'));
  
   const handleSubmit = (e) => {
     
     const newUser = {id: id, uname: name, uemail: email};
-    setUsers([ newUser]);
+    setUser([ newUser]);
   }
   const addProduct = () =>{
     if(!pname && !price ){
       console.log('error');
-    } else if  (name && edit ) {
+    } else if  (pname && edit ) {
       setProducts(products.map((item) => {
         if(item.id === editID){
           return {...item, name: pname , price:price}
@@ -72,26 +78,54 @@ function App() {
     }
 
     useEffect(() => {
-      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('products', JSON.stringify(products));
      
-    },[users, products, setProducts])
+    },[user, products, setProducts])
 
 
 
   return (
     <>
-    <h2> {users.uname && "welcome"} {users.uname}</h2>
+    
         <Navbar login= {login} setLogin={setLogin} />
-        {login && <Login
-        name={name}
-        setName={setName}
-        email={email}
-        setEmail={setEmail}
-        handleSubmit={handleSubmit}
-        />}  
-        <Add edit={edit} setEdit={setEdit} pname={pname} setPname={setPname} price={price} setPrice={setPrice} addProduct={addProduct}/>
-        <Products editItem={editItem}  setEdit={setEdit} products={products} deleteItem={deleteItem} />
+        <Routes>
+              <Route path='/login' element={login && <Login
+                                    name={name}
+                                    setName={setName}
+                                    email={email}
+                                    setEmail={setEmail}
+                                    handleSubmit={handleSubmit}
+                                    />} 
+        />
+
+        <Route path='/' element={<Home/>} />
+        <Route path='/about' element={<About/>} />
+        <Route path='/service' element={<Service/>} />
+        
+          <Route path='/add' element={        <Add edit={edit} setEdit={setEdit} pname={pname} setPname={setPname} price={price} setPrice={setPrice} addProduct={addProduct} editItem={editItem}   products={products} deleteItem={deleteItem}/>} />
+
+        <Route path='*' element={<Error/>} />
+        <Route path='/products' element={
+          <ProtectedRoute user={user} >
+            <Products editItem={editItem}  
+            setEdit={setEdit} 
+            products={products} 
+            deleteItem={deleteItem} />
+          </ProtectedRoute>
+
+        }/>
+
+         </Routes> 
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </>
   )
 

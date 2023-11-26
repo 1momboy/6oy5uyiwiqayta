@@ -1,6 +1,6 @@
 
 
-export default function Add({edit, pname, setPname, price, setPrice, addProduct}) {
+export default function Add({edit, pname, setPname, price, setPrice, addProduct, editItem, products, deleteItem}) {
   return (
     <div>
       <form className="form1" action="" onSubmit={addProduct}>
@@ -22,6 +22,18 @@ export default function Add({edit, pname, setPname, price, setPrice, addProduct}
         {edit ? 'edit' : 'add'}
        </button>
         </form>
+        <div>
+      {products.map((item) => {
+        return (
+          <div className="delete" key={item.id}>
+            <h2>{item.name}</h2>
+            <h2>{item.price}</h2>
+            <button onClick={() => deleteItem(item.id)}>delete</button>
+            <button  onClick={() => editItem(item.id)}>edit</button>
+            </div>
+          )
+      })}
+      </div>
         </div>
   )
 }
